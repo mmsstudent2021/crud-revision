@@ -28,7 +28,8 @@
                                <span class="text-black-50"> {{ Str::words($blog->description,7) }}</span>
                             </td>
                             <td class="text-center">
-                                <form action="{{ route('blog.destroy',$blog->id) }}" method="post">
+                                <a href="{{ route('blog.edit',$blog->id) }}" class="btn btn-sm btn-outline-info">Edit</a>
+                                <form action="{{ route('blog.destroy',$blog->id) }}" class="d-inline-block" method="post">
                                     @csrf
                                     @method('delete')
                                     <button class="btn btn-sm btn-outline-danger">Del</button>

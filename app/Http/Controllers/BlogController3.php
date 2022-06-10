@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBlogRequest;
+use App\Http\Requests\UpdateBlogRequest;
 use App\Models\Blog;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Validator;
 
-class BlogController extends Controller
+class BlogController3 extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,12 +15,6 @@ class BlogController extends Controller
      */
     public function index()
     {
-//        $data = Http::get("https://jsonplaceholder.typicode.com/posts")->object();
-//        foreach ($data as $d){
-//            Blog::create(["title"=>$d->title,"description"=>$d->body]);
-//        }
-//        $blog = new Blog();
-//        $blogs = $blog->all();
         $blogs = Blog::paginate(10);
         return view('blog.index',compact('blogs'));
     }
@@ -34,20 +27,18 @@ class BlogController extends Controller
     public function create()
     {
         return view('blog.create');
+
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreBlogRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreBlogRequest $request)
     {
-        $request->validate([
-            "title" => "required|unique:blogs|max:255",
-            "description" => "required|min:10"
-        ]);
+
 
 //        $blog = new Blog();
 //        $blog->title = $request->title;
@@ -67,42 +58,36 @@ class BlogController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Blog $blog)
     {
-        $blog = Blog::findOrFail($id);
         return $blog;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Blog $blog)
     {
-        $blog = Blog::findOrFail($id);
         return view('blog.edit',compact('blog'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Http\Requests\UpdateBlogRequest  $request
+     * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateBlogRequest $request, Blog $blog)
     {
-        $request->validate([
-           "title"=> "required|unique:blogs,title,$id|max:255",
-            "description"=> "required|min:10"
-        ]);
 
-        $blog = Blog::findOrFail($id);
+
         $blog->title = $request->title;
         $blog->description = $request->description;
         $blog->update();
@@ -113,15 +98,12 @@ class BlogController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Blog $blog)
     {
-        $blog = Blog::findOrFail($id);
         $blog->delete();
-
         return redirect()->route('blog.index')->with("status","New Post is deleted");
-
     }
 }
