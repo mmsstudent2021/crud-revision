@@ -15,7 +15,19 @@ class BlogController3 extends Controller
      */
     public function index()
     {
-        $blogs = Blog::paginate(10);
+    $blogs = Blog::when(request('keyword'),function ($q){
+        $keyword = request("keyword");
+        $q->where("title","like","%$keyword%")
+            ->orWhere("description","like","%$keyword%");
+    })->paginate(10)->withQueryString();
+//        $blogs=Blog::where("id",1)->paginate(10)->through(function ($blog){
+//            $blog->title = strtoupper($blog->title);
+//            $blog->user_id = rand(1,45);
+//            return $blog;
+//        });
+//        dd($blogs->isEmpty());
+//        return $blogs;
+//        dd($blogs);
         return view('blog.index',compact('blogs'));
     }
 

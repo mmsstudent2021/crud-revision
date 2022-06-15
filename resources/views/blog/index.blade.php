@@ -9,6 +9,14 @@
                         {{ session('status') }}
                     </div>
                 @endif
+                <div class="">
+                    <form action="{{ route('blog.index') }}" method="get">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" value="{{ request('keyword') }}" placeholder="Search Post" name="keyword">
+                            <button class="btn btn-outline-primary" type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
                 <table class="table table-bordered align-middle">
                     <thead>
                     <tr>
@@ -41,6 +49,7 @@
                     </tbody>
                 </table>
                 <div class="">
+{{--                    {{ $blogs->appends(request()->query())->links() }}--}}
                     {{ $blogs->links() }}
                 </div>
             </div>
